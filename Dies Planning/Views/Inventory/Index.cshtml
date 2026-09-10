@@ -1,0 +1,176 @@
+﻿@{
+    ViewData["Title"] = "Inventory";
+}
+<head>
+      <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.4.0/dist/css/tabulator_bootstrap5.min.css"
+      crossorigin="anonymous"/>
+</head>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-end align-items-center">
+
+        <div class="d-flex align-items-center gap-2">
+
+            <button type="button"
+                class="btn btn-warning"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#demoOffcanvasEnd"
+                aria-controls="demoOffcanvasEnd">
+            <i class="nav-icon bi bi-funnel-fill"></i>
+            </button>
+
+            <div class="input-group input-group-sm" style="width: 16rem">
+
+                <span class="input-group-text">
+                    <i class="bi bi-search"></i>
+                </span>
+
+                <input id="table-filter"
+                   type="search"
+                   class="form-control"
+                   placeholder="Search..."
+                   aria-label="Filter rows" />
+    
+            </div>
+
+        </div>
+
+        <div
+        class="offcanvas offcanvas-end"
+        tabindex="-1"
+        id="demoOffcanvasEnd"
+        aria-labelledby="demoOffcanvasEndLabel">
+
+            <div class="offcanvas-header">
+               <h5 class="offcanvas-title" id="demoOffcanvasEndLabel">Filters</h5>
+                    <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close">
+                    </button>
+            </div>
+            <div class="offcanvas-body">
+               <div class="mt-2">
+                   <label for="demoOffcanvasStatus" class="form-label"> Status </label>
+                       <select class="form-select" id="demoOffcanvasStatus">
+                            <option selected>Any</option>
+                            <option>Active</option>
+                            <option>Non-Active</option>
+                       </select>
+               </div>
+               <div class="mt-2">
+                   <label for="demoOffcanvasStatus" class="form-label"> Inventory Area </label>
+                       <select class="form-select" id="demoOffcanvasStatus">
+                            <option selected>Any</option>
+                            <option>DIES-ADMIN</option>
+                            <option>DIES-INVCTRL</option>
+                            <option>PRODUCT</option>
+                            <option>PS</option>
+                            <option>VENDOR</option>
+                       </select>
+               </div>
+               <div class="mt-2">
+                   <label for="demoOffcanvasStatus" class="form-label"> Product Type </label>
+                       <select class="form-select" id="demoOffcanvasStatus">
+                            <option selected>Any</option>
+                            <option>Gold</option>
+                            <option>Non-Gold</option>
+                       </select>
+               </div>
+
+               <div class="mt-3">
+                   <button type="button" class="btn btn-success">Apply Filter</button>
+               </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card-body">
+         <div class="d-flex gap-2 mb-3">
+             <button id="export-csv" type="button" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-filetype-csv me-1" aria-hidden="true"></i>
+                            Export CSV
+             </button>
+             <button id="export-json" type="button" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-filetype-json me-1" aria-hidden="true"></i>
+                   Export JSON
+             </button>
+             <button id="print-table" type="button" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-printer me-1" aria-hidden="true"></i>
+                            Print
+             </button>
+         </div>
+         <div id="inventory-table"></div>
+    </div>
+
+    <div class="card-footer text-secondary small">
+        Powered by
+        <a href="https://tabulator.info/" target="_blank" rel="noopener">Tabulator</a>
+        &mdash; vanilla JS, no jQuery required.
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.4.0/dist/js/tabulator.min.js"
+        crossorigin="anonymous"></script>
+<script>
+    const statusBadge = (cell) => {
+        const value = cell.getValue();
+        const map = { Active: 'success', Invited: 'info', Suspended: 'secondary' };
+        const color = map[value] || 'secondary';
+        return `<span class="badge text-bg-${color}">${value}</span>`;
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const table = new Tabulator('#inventory-table', {
+            ajaxURL: '/Inventory/GetData',
+            layout: 'fitColumns',
+            pagination: true,
+            paginationSize: 10,
+            paginationSizeSelector: [10, 25, 50, 100],
+            movableColumns: true,
+            columns: [
+                { title: 'Area', field: 'AREA', headerFilter: 'input' },
+                { title: 'Location', field: 'LOCATION', headerFilter: 'input' },
+                { title: 'Lot No', field: 'LOTNO', headerFilter: 'input' },
+                { title: 'Resource Name', field: 'RESOURCENAME', headerFilter: 'input' },
+                { title: 'Qty', field: 'QTY', headerFilter: 'input' },
+                { title: 'Diameter', field: 'DIESDIAM', headerFilter: 'input' },
+                { title: 'Vendor', field: 'VENDCODE', headerFilter: 'input' },
+                { title: 'Used for', field: 'ASSIGNEDTO', headerFilter: 'input' },
+            ],
+        });
+
+        document.getElementById('table-filter').addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (value) {
+                table.setFilter([
+                    [
+                        { field: 'AREA', type: 'like', value: value },
+                        { field: 'LOCATION', type: 'like', value: value },
+                        { field: 'LOTNO', type: 'like', value: value },
+                        { field: 'RESOURCENAME', type: 'like', value: value },
+                    ],
+                ]);
+            } else {
+                table.clearFilter();
+            }
+        });
+
+        document
+            .getElementById('export-csv')
+            .addEventListener('click', () => table.download('csv', 'users.csv'));
+        document
+            .getElementById('export-json')
+            .addEventListener('click', () => table.download('json', 'users.json'));
+        document
+            .getElementById('print-table')
+            .addEventListener('click', () => table.print(false, true));
+    });
+</script>

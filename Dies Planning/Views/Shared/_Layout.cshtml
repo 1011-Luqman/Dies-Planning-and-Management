@@ -1,50 +1,657 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Dies_Planning</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Dies_Planning.styles.css" asp-append-version="true" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - Dies Planning & Management
+    </title>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- AdminLTE 4 -->
+    <link rel="stylesheet"
+          href="~/Adminlte/dist/css/adminlte.min.css" />
+
+    <!-- Your custom CSS -->
+    <link rel="stylesheet"
+          href="~/css/site.css" />
+
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+    <div class="app-wrapper">
+
+
+        <!-- ================================================= -->
+        <!-- HEADER / NAVBAR                                  -->
+        <!-- ================================================= -->
+
+        <nav class="app-header navbar navbar-expand bg-body">
+
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Dies_Planning</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+
+                <!-- Sidebar Toggle -->
+                <ul class="navbar-nav">
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           data-lte-toggle="sidebar"
+                           href="#"
+                           role="button">
+
+                            <i class="bi bi-list"></i>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+
+                <!-- Right Navbar -->
+                <ul class="navbar-nav ms-auto">
+
+                                <li class="nav-item dropdown">
+              <a
+                class="nav-link"
+                href="#"
+                id="bd-theme"
+                aria-label="Toggle color scheme"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="bi bi-sun-fill" data-lte-theme-icon="light"></i>
+                <i class="bi bi-moon-fill d-none" data-lte-theme-icon="dark"></i>
+                <i class="bi bi-circle-half d-none" data-lte-theme-icon="auto"></i>
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="bd-theme"
+                style="--bs-dropdown-min-width: 8rem"
+              >
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="light"
+                    aria-pressed="false"
+                  >
+                    <i class="bi bi-sun-fill me-2"></i>
+                    Light
+                    <i class="bi bi-check-lg ms-auto d-none"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="dark"
+                    aria-pressed="false"
+                  >
+                    <i class="bi bi-moon-fill me-2"></i>
+                    Dark
+                    <i class="bi bi-check-lg ms-auto d-none"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center active"
+                    data-bs-theme-value="auto"
+                    aria-pressed="true"
+                  >
+                    <i class="bi bi-circle-half me-2"></i>
+                    Auto
+                    <i class="bi bi-check-lg ms-auto d-none"></i>
+                  </button>
+                </li>
+              </ul>
+            </li>
+
+                    <!-- Notifications -->
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="#">
+
+                            <i class="bi bi-bell"></i>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- User -->
+                    <li class="nav-item dropdown">
+
+                        <a class="nav-link"
+                           href="#">
+
+                            <i class="bi bi-person-circle"></i>
+
+                            <span class="ms-1">
+                                Luqman
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
             </div>
+
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
+
+
+        <!-- ================================================= -->
+        <!-- SIDEBAR                                           -->
+        <!-- ================================================= -->
+
+        <aside class="app-sidebar bg-body-secondary shadow"
+               data-bs-theme="dark">
+
+
+            <!-- Brand -->
+            <div class="sidebar-brand">
+
+                <a asp-controller="Dashboard"
+                   asp-action="Index"
+                   class="brand-link">
+
+                    <i class="bi bi-gear-wide-connected me-2"></i>
+
+                    <span class="brand-text fw-light">
+                        Dies <b>Management</b>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Sidebar Wrapper -->
+            <div class="sidebar-wrapper">
+
+                <nav class="mt-2">
+
+                    <ul class="nav sidebar-menu flex-column"
+                        data-lte-toggle="treeview"
+                        role="menu"
+                        data-accordion="false">
+
+
+                        <!-- ============================== -->
+                        <!-- DASHBOARD                       -->
+                        <!-- ============================== -->
+
+                        <li class="nav-item">
+
+                            <a asp-controller="Dashboard"
+                               asp-action="Index"
+                               class="nav-link @(currentController == "Dashboard" ? "active" : "")">
+
+                                <i class="nav-icon bi bi-speedometer2"></i>
+
+                                <p>Dashboard</p>
+
+                            </a>
+
+                        </li>
+
+
+                        <!-- ============================== -->
+                        <!-- MASTER DATA                     -->
+                        <!-- ============================== -->
+
+                        <li class="nav-item menu-open">
+
+                            <a href="#"
+                               class="nav-link">
+
+                                <i class="nav-icon bi bi-database"></i>
+
+                                <p>
+
+                                    Master Data
+
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+
+                                </p>
+
+                            </a>
+
+
+                            <ul class="nav nav-treeview">
+
+                                <li class="nav-item @(currentController == "Inventory" ? "menu-open" : "")">
+
+                                    <a asp-controller="Inventory"
+                                       asp-action="Index"
+                                       class="nav-link @(currentController == "Inventory" ? "active" : "")">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Inventory
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+                                <li class="nav-item @(currentController == "Mileage" ? "menu-open" : "")">
+
+                                    <a asp-controller="Mileage"
+                                       asp-action="Index"
+                                       class="nav-link @(currentController == "Mileage" ? "active" : "")">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Mileage
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+
+                            </ul>                          
+
+                        </li>
+
+
+                        <!-- ============================== -->
+                        <!-- DIES PLANNING                   -->
+                        <!-- ============================== -->
+
+                        <li class="nav-item">
+
+                            <a href="#"
+                               class="nav-link">
+
+                                <i class="nav-icon bi bi-calendar3"></i>
+
+                                <p>
+
+                                    Dies Planning
+
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+
+                                </p>
+
+                            </a>
+
+
+                            <ul class="nav nav-treeview">
+
+                                <li class="nav-item">
+
+                                    <a href="#"
+                                       class="nav-link">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Planning
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item">
+
+                                    <a href="#"
+                                       class="nav-link">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Calendar
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+
+                        <!-- ============================== -->
+                        <!-- DIES MANAGEMENT                 -->
+                        <!-- ============================== -->
+
+                        <li class="nav-item">
+
+                            <a href="#"
+                               class="nav-link">
+
+                                <i class="nav-icon bi bi-box-seam"></i>
+
+                                <p>
+
+                                    Dies Management
+
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+
+                                </p>
+
+                            </a>
+
+
+                            <ul class="nav nav-treeview">
+
+                                <li class="nav-item">
+
+                                    <a href="#"
+                                       class="nav-link">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Dies Issueance (coming soon!)
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item">
+
+                                    <a href="#"
+                                       class="nav-link">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Dies Return (coming soon!)
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item">
+
+                                    <a href="#"
+                                       class="nav-link">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Movement (coming soon!)
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item">
+
+                                    <a href="#"
+                                       class="nav-link">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Repair
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+
+                        <!-- ============================== -->
+                        <!-- REPORTS                         -->
+                        <!-- ============================== -->
+
+                        <li class="nav-item">
+
+                            <a href="#"
+                               class="nav-link">
+
+                                <i class="nav-icon bi bi-bar-chart"></i>
+
+                                <p>
+
+                                    Reports
+
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+
+                                </p>
+
+                            </a>
+
+
+                            <ul class="nav nav-treeview">
+
+                                <li class="nav-item">
+
+                                    <a href="#"
+                                       class="nav-link">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Stock Report
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item">
+
+                                    <a href="#"
+                                       class="nav-link">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Movement Report
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item">
+
+                                    <a href="#"
+                                       class="nav-link">
+
+                                        <i class="nav-icon bi bi-circle"></i>
+
+                                        <p>
+                                            Planning Report
+                                        </p>
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+
+                        <!-- ============================== -->
+                        <!-- ADMINISTRATION                  -->
+                        <!-- ============================== -->
+
+                        <li class="nav-header">
+                            ADMINISTRATION
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a href="#"
+                               class="nav-link">
+
+                                <i class="nav-icon bi bi-people"></i>
+
+                                <p>
+                                    Users
+                                </p>
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a href="#"
+                               class="nav-link">
+
+                                <i class="nav-icon bi bi-gear"></i>
+
+                                <p>
+                                    Settings
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </nav>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================================================= -->
+        <!-- MAIN CONTENT                                      -->
+        <!-- ================================================= -->
+
+        <main class="app-main">
+
+
+            <!-- Page Header -->
+            <div class="app-content-header">
+
+                <div class="container-fluid">
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+
+                            <h3 class="mb-0">
+                                @ViewData["Title"]
+                            </h3>
+
+                        </div>
+
+                        <div class="col-sm-6">
+
+                            <ol class="breadcrumb float-sm-end">
+
+                                <li class="breadcrumb-item">
+
+                                    <a asp-controller="Dashboard"
+                                       asp-action="Index">
+
+                                        Home
+
+                                    </a>
+
+                                </li>
+
+                                <li class="breadcrumb-item active">
+
+                                    @ViewData["Title"]
+
+                                </li>
+
+                            </ol>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Page Body -->
+            <div class="app-content">
+
+                <div class="container-fluid">
+
+                    @RenderBody()
+
+                </div>
+
+            </div>
+
+
         </main>
+
+
+        <!-- ================================================= -->
+        <!-- FOOTER                                            -->
+        <!-- ================================================= -->
+
+        <footer class="app-footer">
+            <div class="float-end d-none d-sm-inline">
+                Dies Planning & Management System
+            </div>
+            <strong>Copyright &copy; 2026</strong>
+        </footer>
+
+
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Dies_Planning - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js"
+            crossorigin="anonymous"></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            crossorigin="anonymous"></script>
+    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+
+    <!-- AdminLTE 4 JavaScript -->
+    <script src="~/Adminlte/dist/js/adminlte.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
+
 </html>

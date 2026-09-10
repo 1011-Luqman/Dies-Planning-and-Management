@@ -1,0 +1,370 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+
+<div class="row">
+
+    <!-- Total Dies -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box text-bg-primary">
+            <div class="inner">
+                <h3>125</h3>
+                <p>Total Dies</p>
+            </div>
+            <div class="icon">
+                @* <i class="bi bi-stop-circle-fill"></i> *@
+            </div>
+            <a asp-controller="Dies"
+               asp-action="Index"
+               class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                More info <i class="bi bi-link-45deg"></i>
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Available -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>82</h3>
+                <p>Available Dies</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <a asp-controller="Inventory"
+               asp-action="Index"
+               class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                More info <i class="bi bi-link-45deg"></i>
+            </a>
+        </div>
+    </div>
+
+
+    <!-- New Dies -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box text-bg-warning">
+            <div class="inner">
+                <h3>150</h3>
+                <p>New Dies</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <a asp-controller="Inventory"
+               asp-action="Index"
+               class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover">
+                More info <i class="bi bi-link-45deg"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Repair Dies -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box text-bg-danger">
+            <div class="inner">
+                <h3>67</h3>
+                <p>Repair Dies</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <a asp-controller="Inventory"
+               asp-action="Index"
+               class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                More info <i class="bi bi-link-45deg"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-6">
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Au<b>THOR</b> - Incoming Diameter & Outgoing Diameter</h3>
+                    <a href="javascript:void(0);"
+                       class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">More Info</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex">
+                    <p class="d-flex flex-column">
+                        <label for="report-period" class="form-label">Period</label>
+                        <input type="text"
+                               id="report-period"
+                               class="form-control"
+                               placeholder="Select" />
+                    </p>
+                    <p class="ms-auto d-flex flex-column text-end">
+                        <span class="text-success"> <i class="bi bi-arrow-up"></i> 12.5% </span>
+                        <span class="text-secondary">Since last week</span>
+                    </p>
+                </div>
+                <!-- /.d-flex -->
+
+                <div class="position-relative mb-4">
+                    <div id="visitors-chart"></div>
+                </div>
+
+                <div class="d-flex flex-row justify-content-end">
+                    <span class="me-2">
+                        <i class="bi bi-square-fill text-primary"></i> Δ Incoming
+                    </span>
+
+                    <span> <i class="bi bi-square-fill text-secondary"></i> δ Outgoing </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+                <div class="card mb-6">
+                  <div class="card-header">
+                    <h3 class="card-title">Dies Qty by Location</h3>
+
+                    <div class="card-tools">
+                      <button
+                        type="button"
+                        class="btn btn-tool"
+                        data-lte-toggle="card-collapse"
+                        aria-label="Collapse card"
+                      >
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body">
+                    <!--begin::Row-->
+                    <div class="card-body">
+                        <div id="pie-chart"></div>
+                    </div>
+                    <!--end::Row-->
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
+        crossorigin="anonymous">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"
+        integrity="sha384-5JqMv4L/Xa0hfvtF06qboNdhvuYXUku9ZrhZh3bSk8VXF0A/RuSLHpLsSV9Zqhl6"
+        crossorigin="anonymous"></script>
+
+<script>
+    const pie_chart_options = {
+        series: [700, 500, 400, 600, 300, 100],
+
+        chart: {
+            type: 'donut',
+            height: 350,
+            width: '100%'
+        },
+
+        labels: [
+            'ADM-TRANSIT',
+            'DRAWING-DIES-STK',
+            'INVCTRL-DIES-NG',
+            'INVCTRL-DIES-REPAIR',
+            'INVCTRL-DIES-STK',
+            'INVCTRL-DIES-TEMP'
+        ],
+
+        dataLabels: {
+            enabled: false
+        },
+
+        colors: [
+            '#0d6efd',
+            '#20c997',
+            '#ffc107',
+            '#d63384',
+            '#6f42c1',
+            '#adb5bd'
+        ],
+
+        plotOptions: {
+            pie: {
+                customScale: 0.95,
+
+                donut: {
+                    size: '60%'
+                }
+            }
+        },
+
+        legend: {
+            position: 'right',
+            horizontalAlign: 'left',
+            verticalAlign: 'middle',
+
+            fontSize: '14px',
+
+            markers: {
+                width: 12,
+                height: 12
+            },
+
+            itemMargin: {
+                vertical: 5
+            }
+        },
+
+        responsive: [
+            {
+                breakpoint: 768,
+                options: {
+                    chart: {
+                        height: 400
+                    },
+
+                    plotOptions: {
+                        pie: {
+                            customScale: 1.0
+                        }
+                    },
+
+                    legend: {
+                        position: 'bottom',
+                        horizontalAlign: 'left',
+
+                        fontSize: '13px',
+
+                        itemMargin: {
+                            horizontal: 8,
+                            vertical: 4
+                        }
+                    }
+                }
+            }
+        ]
+    };
+
+    const pie_chart = new ApexCharts(
+        document.querySelector('#pie-chart'),
+        pie_chart_options
+    );
+
+    pie_chart.render();
+</script>
+
+<script>
+    // 1. Initialise the Line Chart with placeholders
+    const visitors_chart_options = {
+        series: [
+            {
+                name: 'Δ Incoming',
+                data: [],
+            }
+        ],
+        chart: {
+            height: 300,
+            type: 'line',
+            toolbar: { show: true },
+        },
+        colors: ['#0d6efd'],
+        stroke: { curve: 'smooth', width: 3 },
+        grid: {
+            borderColor: '#e7e7e7',
+            row: { colors: ['#f3f3f3', 'transparent'], opacity: 0.5 },
+        },
+        legend: { show: false },
+        markers: { size: 4 },
+        xaxis: {
+            type: 'datetime',
+            labels: {
+                datetimeFormatter: {
+                    year: 'yyyy',
+                    month: 'MMMM yyyy',
+                    day: 'dd MMM',
+                    hour: 'HH:mm'
+                }
+            },
+            tickAmount: 12
+        },
+        tooltip: {
+            x: {
+                format: 'dd MMM yyyy'
+            }
+        },
+        noData: {
+            text: 'Loading data or no data available for the selected range...',
+            align: 'center',
+            verticalAlign: 'middle',
+            style: { color: '#6c757d', fontSize: '14px' }
+        }
+    };
+
+    const visitors_chart = new ApexCharts(
+        document.querySelector('#visitors-chart'),
+        visitors_chart_options,
+    );
+    visitors_chart.render();
+
+    // 2. Function to fetch data from DashboardController
+    function updateDiameterChart(startDate = '', endDate = '') {
+        let url = `@Url.Action("GetDiameterData", "Dashboard")`;
+
+        if (startDate && endDate) {
+            url += `?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
+        }
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                // Map API objects into [timestamp, value] pairs for ApexCharts datetime type
+                const chartData = data.map(item => [
+                    new Date(item.date).getTime(),
+                    item.deltaIncoming
+                ]);
+
+                visitors_chart.updateSeries([
+                    {
+                        name: 'Δ Incoming',
+                        data: chartData
+                    }
+                ]);
+            })
+            .catch(error => {
+                console.error('Error loading diameter data:', error);
+            });
+    }
+
+    // 3. Document initialization
+    document.addEventListener('DOMContentLoaded', () => {
+        // Load initial data on page load
+        updateDiameterChart(
+            '2026-01-01',
+            '2026-12-31'
+        );
+
+        // Setup Flatpickr with an onClose hook to catch user selections
+        flatpickr('#report-period', {
+            mode: 'range',
+            dateFormat: 'Y-m-d',
+            onClose: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    const startDate = instance.formatDate(selectedDates[0], 'Y-m-d');
+                    const endDate = instance.formatDate(selectedDates[1], 'Y-m-d');
+                    
+                    updateDiameterChart(startDate, endDate);
+                }
+            }
+        });
+    });
+</script>
